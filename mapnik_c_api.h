@@ -23,9 +23,7 @@ const int MAPNIK_NONE = 0;
 const int MAPNIK_DEBUG = 1;
 const int MAPNIK_WARN = 2;
 const int MAPNIK_ERROR = 3;
-
 MAPNIKCAPICALL void mapnik_logging_set_severity(int);
-
 MAPNIKCAPICALL std::string mapnik_register_last_error();
 
 // BBOX
