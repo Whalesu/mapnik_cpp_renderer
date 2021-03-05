@@ -1,5 +1,5 @@
-#ifndef MAPNIK_C_API_H
-#define MAPNIK_C_API_H
+#ifndef IMAGE_PROVIDER_MAPNIK_C_API_H
+#define IMAGE_PROVIDER_MAPNIK_C_API_H
 
 #include <cstdint>
 #include <string>
@@ -16,8 +16,8 @@ const int mapnik_version_major = MAPNIK_MAJOR_VERSION;
 const int mapnik_version_minor = MAPNIK_MINOR_VERSION;
 const int mapnik_version_patch = MAPNIK_PATCH_VERSION;
 
-MAPNIKCAPICALL int mapnik_register_datasource(std::string path);
-MAPNIKCAPICALL int mapnik_register_font(std::string path);
+MAPNIKCAPICALL int mapnik_register_datasource(std::string const&path);
+MAPNIKCAPICALL int mapnik_register_font(std::string const&path);
 
 const int MAPNIK_NONE = 0;
 const int MAPNIK_DEBUG = 1;
@@ -55,9 +55,9 @@ typedef struct _mapnik_map_t mapnik_map_t;
 MAPNIKCAPICALL mapnik_map_t *mapnik_map(unsigned int width, unsigned int height);
 MAPNIKCAPICALL void mapnik_map_free(mapnik_map_t *m);
 
-MAPNIKCAPICALL std::string mapnik_map_last_error(mapnik_map_t *m);
+MAPNIKCAPICALL std::string *mapnik_map_last_error(mapnik_map_t *m);
 
-MAPNIKCAPICALL int mapnik_map_load(mapnik_map_t *m, std::string stylesheet);
+MAPNIKCAPICALL int mapnik_map_load(mapnik_map_t *m, std::string const &stylesheet);
 MAPNIKCAPICALL int mapnik_map_load_string(mapnik_map_t *m, std::string const &style_conf);
 MAPNIKCAPICALL void mapnik_apply_layer_off_hack(mapnik_map_t *m);
 
@@ -76,7 +76,7 @@ MAPNIKCAPICALL void mapnik_map_zoom_to_box(mapnik_map_t *m, mapnik_bbox_t *b);
 MAPNIKCAPICALL void mapnik_map_set_maximum_extent(mapnik_map_t *m, double x0, double y0, double x1, double y1);
 MAPNIKCAPICALL void mapnik_map_reset_maximum_extent(mapnik_map_t *m);
 
-MAPNIKCAPICALL int mapnik_map_render_to_file(mapnik_map_t *m, std::string filepath, double scale, double scale_factor, const char *format);
+MAPNIKCAPICALL int mapnik_map_render_to_file(mapnik_map_t *m, std::string const &filepath, double scale, double scale_factor, std::string const &format);
 MAPNIKCAPICALL mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, double scale, double scale_factor);
 
 MAPNIKCAPICALL int mapnik_map_layer_count(mapnik_map_t *m);

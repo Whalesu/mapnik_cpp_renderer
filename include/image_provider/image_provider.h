@@ -1,8 +1,9 @@
-#ifndef IMAGE_PROVIDERS_H
-#define IMAGE_PROVIDERS_H
+#pragma once
+#ifndef IMAGE_PROVIDER_IMAGE_PROVIDER_H
+#define IMAGE_PROVIDER_IMAGE_PROVIDER_H
 
 #include <string>
-#include "mapnik_c_api.h"
+#include "image_provider/mapnik_c_api.h"
 
 class ImageProvider
 {
@@ -16,6 +17,7 @@ public:
                     int height = 256,
                     float scale_factor = 1.0,
                     bool xml_string_loading = false);
+    std::string get_err_log();
 
 private:
     std::string base_path;

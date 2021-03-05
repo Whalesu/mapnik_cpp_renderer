@@ -16,7 +16,7 @@
 #error go-mapnik requires Mapnik 3
 #endif
 
-#include "mapnik_c_api.h"
+#include "image_provider/mapnik_c_api.h"
 
 #include <stdlib.h>
 #include <string>
@@ -39,7 +39,7 @@ inline void mapnik_register_reset_last_error()
     }
 }
 
-int mapnik_register_datasource(std::string path)
+int mapnik_register_datasource(std::string const &path)
 {
     mapnik_register_reset_last_error();
     try
@@ -54,7 +54,7 @@ int mapnik_register_datasource(std::string path)
     return 1;
 }
 
-int mapnik_register_font(std::string path)
+int mapnik_register_font(std::string const &path)
 {
     mapnik_register_reset_last_error();
     try
@@ -165,14 +165,14 @@ double mapnik_map_get_scale_denominator(mapnik_map_t *m)
     return 0.0;
 }
 
-int mapnik_map_load(mapnik_map_t *m, std::string stylesheet)
+int mapnik_map_load(mapnik_map_t *m, std::string const &stylesheet)
 {
     mapnik_map_reset_last_error(m);
     if (m && m->m)
     {
         try
         {
-            mapnik::load_map_string(*m->m, stylesheet);
+            mapnik::load_map(*m->m, stylesheet);
         }
         catch (std::exception const &ex)
         {
@@ -255,7 +255,7 @@ MAPNIKCAPICALL void mapnik_map_set_buffer_size(mapnik_map_t *m, int buffer_size)
     m->m->set_buffer_size(buffer_size);
 }
 
-std::string mapnik_map_last_error(mapnik_map_t *m)
+std::string *mapnik_map_last_error(mapnik_map_t *m)
 {
     if (m && m->err)
     {
@@ -363,7 +363,7 @@ mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, double scale, double
     return i;
 }
 
-int mapnik_map_render_to_file(mapnik_map_t *m, std::string filepath, double scale, double scale_factor, std::string format)
+int mapnik_map_render_to_file(mapnik_map_t *m, std::string const &filepath, double scale, double scale_factor, std::string const &format)
 {
     mapnik_map_reset_last_error(m);
     if (m && m->m)
@@ -462,7 +462,7 @@ std::string mapnik_map_layer_name(mapnik_map_t *m, size_t idx)
     if (m && m->m)
     {
         mapnik::layer const &layer = m->m->get_layer(idx);
-        std::string name(namelayer.name());
+        std::string name = layer.name();
         return name;
     }
     return NULL;

@@ -1,6 +1,7 @@
 #include <string>
-#include "mapnik_c_api.h"
-#include "image_provider.h"
+#include <iostream>
+#include "image_provider/mapnik_c_api.h"
+#include "image_provider/image_provider.h"
 
 // typedef struct _mapnik_map_t mapnik_map_t;
 // mapnik_map_t *mapnik_map(unsigned int width, unsigned int height);
@@ -12,9 +13,11 @@ ImageProvider::ImageProvider(std::string const &font_dir)
     this->font_dir = font_dir;
     // map.reset(mapnik_map(0, 0));
     int status = mapnik_register_font(font_dir);
+    std::string dtsrc = "/usr/local/lib/mapnik/input/postgis.input";
+    status = mapnik_register_datasource(dtsrc);
     map = mapnik_map(0, 0);
     bbox2d = nullptr;
-};
+}
 
 ImageProvider::~ImageProvider()
 {
@@ -23,7 +26,13 @@ ImageProvider::~ImageProvider()
     {
         mapnik_bbox_free(bbox2d);
     }
-};
+    std::cout << "image removed" << std::endl;
+}
+
+std::string ImageProvider::get_err_log()
+{
+    return *mapnik_map_last_error(map);
+}
 
 int ImageProvider::render_area(std::string const &xml_config,
                                double bbox[],
@@ -40,13 +49,16 @@ int ImageProvider::render_area(std::string const &xml_config,
     }
     else
     {
-        const char *config_cstr = xml_config.c_str();
-        status = mapnik_map_load(map, config_cstr);
+        status = mapnik_map_load(map, xml_config);
+        std::cout << "curr status" << status << std::endl;
     }
+    // std::cout << "err output:" << *mapnik_map_last_error(map) << std::endl;
     mapnik_map_set_width(map, width);
     mapnik_map_set_height(map, height);
     bbox2d = mapnik_bbox(bbox[0], bbox[1], bbox[2], bbox[3]);
     mapnik_map_zoom_to_box(map, bbox2d);
+    // std::cout << "err output:" << *mapnik_map_last_error(map) << std::endl;
     status = mapnik_map_render_to_file(map, image_path, 1.0, scale_factor, "png256");
+    // std::cout << "err output:" << *mapnik_map_last_error(map) << std::endl;
     return status;
-};
+}
