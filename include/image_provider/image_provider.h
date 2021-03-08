@@ -2,8 +2,8 @@
 #ifndef IMAGE_PROVIDER_IMAGE_PROVIDER_H
 #define IMAGE_PROVIDER_IMAGE_PROVIDER_H
 
-#include <string>
 #include "image_provider/mapnik_c_api.h"
+#include <string>
 
 class ImageProvider
 {
@@ -11,7 +11,7 @@ public:
     explicit ImageProvider(std::string const &font_dir);
     ~ImageProvider();
     int render_area(std::string const &xml_config,
-                    double bbox[],
+                    double *const bbox,
                     std::string const &image_path = "",
                     int width = 256,
                     int height = 256,

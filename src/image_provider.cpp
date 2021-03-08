@@ -1,7 +1,7 @@
-#include <string>
-#include <iostream>
-#include "image_provider/mapnik_c_api.h"
 #include "image_provider/image_provider.h"
+#include "image_provider/mapnik_c_api.h"
+#include <iostream>
+#include <string>
 
 // typedef struct _mapnik_map_t mapnik_map_t;
 // mapnik_map_t *mapnik_map(unsigned int width, unsigned int height);
@@ -35,7 +35,7 @@ std::string ImageProvider::get_err_log()
 }
 
 int ImageProvider::render_area(std::string const &xml_config,
-                               double bbox[],
+                               double *const bbox,
                                std::string const &image_path,
                                int width,
                                int height,
@@ -55,7 +55,7 @@ int ImageProvider::render_area(std::string const &xml_config,
     // std::cout << "err output:" << *mapnik_map_last_error(map) << std::endl;
     mapnik_map_set_width(map, width);
     mapnik_map_set_height(map, height);
-    bbox2d = mapnik_bbox(bbox[0], bbox[1], bbox[2], bbox[3]);
+    bbox2d = mapnik_bbox(*bbox, *(bbox + 1), *(bbox + 2), *(bbox + 3));
     mapnik_map_zoom_to_box(map, bbox2d);
     // std::cout << "err output:" << *mapnik_map_last_error(map) << std::endl;
     status = mapnik_map_render_to_file(map, image_path, 1.0, scale_factor, "png256");
