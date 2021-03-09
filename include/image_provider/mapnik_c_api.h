@@ -2,8 +2,8 @@
 #define IMAGE_PROVIDER_MAPNIK_C_API_H
 
 #include <cstdint>
-#include <string>
 #include <mapnik/version.hpp>
+#include <string>
 
 #if defined(WIN32) || defined(WINDOWS) || defined(_WIN32) || defined(_WINDOWS)
 #define MAPNIKCAPICALL __declspec(dllexport)
@@ -16,8 +16,9 @@ const int mapnik_version_major = MAPNIK_MAJOR_VERSION;
 const int mapnik_version_minor = MAPNIK_MINOR_VERSION;
 const int mapnik_version_patch = MAPNIK_PATCH_VERSION;
 
-MAPNIKCAPICALL int mapnik_register_datasource(std::string const&path);
-MAPNIKCAPICALL int mapnik_register_font(std::string const&path);
+MAPNIKCAPICALL int mapnik_register_datasource(std::string const &path);
+MAPNIKCAPICALL int mapnik_register_font(std::string const &path);
+MAPNIKCAPICALL int mapnik_register_fonts(std::string const &dir, bool recurse = false);
 
 const int MAPNIK_NONE = 0;
 const int MAPNIK_DEBUG = 1;

@@ -12,7 +12,7 @@ ImageProvider::ImageProvider(std::string const &font_dir)
 {
     this->font_dir = font_dir;
     // map.reset(mapnik_map(0, 0));
-    int status = mapnik_register_font(font_dir);
+    int status = mapnik_register_fonts(font_dir);
     std::string dtsrc = "/usr/local/lib/mapnik/input/postgis.input";
     status = mapnik_register_datasource(dtsrc);
     map = mapnik_map(0, 0);

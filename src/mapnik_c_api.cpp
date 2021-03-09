@@ -1,16 +1,16 @@
 
 // Formatted with: astyle  --style=google --pad-oper --add-brackets
 
-#include <mapnik/debug.hpp>
-#include <mapnik/version.hpp>
-#include <mapnik/map.hpp>
-#include <mapnik/layer.hpp>
-#include <mapnik/color.hpp>
-#include <mapnik/image_util.hpp>
 #include <mapnik/agg_renderer.hpp>
-#include <mapnik/load_map.hpp>
+#include <mapnik/color.hpp>
 #include <mapnik/datasource_cache.hpp>
+#include <mapnik/debug.hpp>
 #include <mapnik/font_engine_freetype.hpp>
+#include <mapnik/image_util.hpp>
+#include <mapnik/layer.hpp>
+#include <mapnik/load_map.hpp>
+#include <mapnik/map.hpp>
+#include <mapnik/version.hpp>
 
 #if MAPNIK_VERSION < 300000
 #error go-mapnik requires Mapnik 3
@@ -35,7 +35,7 @@ inline void mapnik_register_reset_last_error()
     if (register_err)
     {
         delete register_err;
-        register_err = NULL;
+        register_err = nullptr;
     }
 }
 
@@ -60,6 +60,20 @@ int mapnik_register_font(std::string const &path)
     try
     {
         return mapnik::freetype_engine::register_font(path);
+    }
+    catch (std::exception const &ex)
+    {
+        register_err = new std::string(ex.what());
+        return 0;
+    }
+}
+
+int mapnik_register_fonts(std::string const &dir, bool recurse)
+{
+    mapnik_register_reset_last_error();
+    try
+    {
+        return mapnik::freetype_engine::register_fonts(dir, recurse);
     }
     catch (std::exception const &ex)
     {
@@ -108,7 +122,7 @@ mapnik_map_t *mapnik_map(unsigned width, unsigned height)
 {
     mapnik_map_t *map = new mapnik_map_t;
     map->m = new mapnik::Map(width, height);
-    map->err = NULL;
+    map->err = nullptr;
     return map;
 }
 
@@ -261,7 +275,7 @@ std::string *mapnik_map_last_error(mapnik_map_t *m)
     {
         return m->err;
     }
-    return NULL;
+    return nullptr;
 }
 
 struct _mapnik_bbox_t
