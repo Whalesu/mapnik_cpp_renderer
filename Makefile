@@ -12,4 +12,4 @@ LIBNAME := mapnik_renderer
 
 all: $(LIBNAME)
 $(LIBNAME): mapnik_renderer.cpp
-	$(CXX) -o $(LIBNAME) $(SHARED_FLAG) mapnik_renderer.cpp src/image_provider.cpp src/mapnik_c_api.cpp -I ./include $(LDFLAGS) $(CXXFLAGS) $(MAPNIK_CXXFLAGS) $(MAPNIK_LDFLAGS)
+	$(CXX) -o $(LIBNAME) $(SHARED_FLAG) mapnik_renderer.cpp src/image_provider.cpp src/mapnik_c_api.cpp src/utils/util.cpp -I ./include $(LDFLAGS) $(CXXFLAGS) $(MAPNIK_CXXFLAGS) $(MAPNIK_LDFLAGS)

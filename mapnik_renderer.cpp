@@ -5,6 +5,7 @@ namespace po = boost::program_options;
 
 #include "image_provider/image_provider.h"
 #include "image_provider/mapnik_c_api.h"
+#include "utils/util.h"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -13,23 +14,26 @@ using namespace std;
 
 const string FONTDIR = "FONTDIR";
 
-string get_env_var(string const &key)
-{
-    char *val = getenv(key.c_str());
-    return val == NULL ? "" : string(val);
-}
-
 int main(int argc, char *argv[])
 {
     po::options_description map_input("mapnik_render options");
     vector<double> bbox;
     string trgt_img = "";
     string xml_info = "";
+    int res = 0;
     bool is_xml_string = false;
 
     try
     {
-        map_input.add_options()("help,h", "show available options")("xml_dir", po::value<string>(), "imported config")("trgt_img, img", po::value<string>(&trgt_img)->default_value("/Users/jingyusu/Desktop/test.png"), "export filepath")("bbox", po::value<vector<double>>(&bbox)->multitoken()->composing(), "bbox of tile")("height", po::value<int>()->default_value(256), "tile height in pixel")("width", po::value<int>()->default_value(256), "tile width in pixel")("scale", po::value<float>()->default_value(1.0), "scale factor")("xml_string", po::value<string>(), "xml config passed as string");
+        map_input.add_options()
+        ("help,h", "show available options")
+        ("xml_dir", po::value<string>(), "imported config")
+        ("trgt_img, img", po::value<string>(&trgt_img)->default_value("/Users/jingyusu/Desktop/test.png"), "export filepath")
+        ("bbox", po::value<vector<double>>(&bbox)->multitoken()->composing(), "bbox of tile")
+        ("height", po::value<int>()->default_value(256), "tile height in pixel")
+        ("width", po::value<int>()->default_value(256), "tile width in pixel")
+        ("scale_factor", po::value<float>()->default_value(1.0), "scale factor")
+        ("xml_string", po::value<bool>(), "optional xml config passed as string");
     }
     catch (std::exception &ex)
     {
@@ -69,8 +73,16 @@ int main(int argc, char *argv[])
     }
     /*------- image processing -------*/
     const std::string font_dir = get_env_var(FONTDIR);
-    // double bbox[4] = {13529488.098648008 3659472.8978689983 13530101.233294496 3660085.70353947};
-    // double bbox[4] = {13529488.05499435, 3660084.1121049374, 13530101.189715622, 3660696.920278768};
+    res = ImageProvider::register_resources();
     ImageProvider image_provider = ImageProvider(font_dir);
-    image_provider.render_area(xml_info, bbox.data(), trgt_img, input["width"].as<int>(), input["height"].as<int>(), input["scale"].as<float>(), is_xml_string);
+    if (res == 0)
+    {
+        res = image_provider.render_area(
+                  xml_info, bbox.data(), trgt_img, input["width"].as<int>(),
+                  input["height"].as<int>(), input["scale_factor"].as<float>(), is_xml_string
+              );
+    }
+    if (res != 0)
+        std::cerr << image_provider.get_err_log()<< '\n';
+    return res;
 }

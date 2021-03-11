@@ -17,6 +17,7 @@ const int mapnik_version_minor = MAPNIK_MINOR_VERSION;
 const int mapnik_version_patch = MAPNIK_PATCH_VERSION;
 
 MAPNIKCAPICALL int mapnik_register_datasource(std::string const &path);
+MAPNIKCAPICALL int mapnik_register_datasources(std::string const &dir, bool recurse = false);
 MAPNIKCAPICALL int mapnik_register_font(std::string const &path);
 MAPNIKCAPICALL int mapnik_register_fonts(std::string const &dir, bool recurse = false);
 
@@ -25,6 +26,7 @@ const int MAPNIK_DEBUG = 1;
 const int MAPNIK_WARN = 2;
 const int MAPNIK_ERROR = 3;
 MAPNIKCAPICALL void mapnik_logging_set_severity(int);
+MAPNIKCAPICALL void mapnik_register_reset_last_error();
 MAPNIKCAPICALL std::string mapnik_register_last_error();
 
 // BBOX
@@ -77,7 +79,7 @@ MAPNIKCAPICALL void mapnik_map_zoom_to_box(mapnik_map_t *m, mapnik_bbox_t *b);
 MAPNIKCAPICALL void mapnik_map_set_maximum_extent(mapnik_map_t *m, double x0, double y0, double x1, double y1);
 MAPNIKCAPICALL void mapnik_map_reset_maximum_extent(mapnik_map_t *m);
 
-MAPNIKCAPICALL int mapnik_map_render_to_file(mapnik_map_t *m, std::string const &filepath, double scale, double scale_factor, std::string const &format);
+MAPNIKCAPICALL int mapnik_map_render_to_file(mapnik_map_t *m, std::string const &filepath, float scale, float scale_factor, std::string const &format);
 MAPNIKCAPICALL mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, double scale, double scale_factor);
 
 MAPNIKCAPICALL int mapnik_map_layer_count(mapnik_map_t *m);

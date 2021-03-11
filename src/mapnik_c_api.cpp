@@ -13,18 +13,13 @@
 #include <mapnik/version.hpp>
 
 #if MAPNIK_VERSION < 300000
-#error go-mapnik requires Mapnik 3
+#error Mapnik 3 is needed
 #endif
 
 #include "image_provider/mapnik_c_api.h"
 
 #include <stdlib.h>
 #include <string>
-
-// #ifndef __cplusplus
-// extern "C"
-// {
-// #endif
 
 typedef mapnik::image_rgba8 mapnik_rgba_image;
 
@@ -49,9 +44,24 @@ int mapnik_register_datasource(std::string const &path)
     catch (std::exception const &ex)
     {
         register_err = new std::string(ex.what());
-        return 0;
+        return -1;
     }
-    return 1;
+    return 0;
+}
+
+int mapnik_register_datasources(std::string const &dir, bool recurse)
+{
+    mapnik_register_reset_last_error();
+    try
+    {
+        mapnik::datasource_cache::instance().register_datasources(dir, recurse);
+    }
+    catch (std::exception const &ex)
+    {
+        register_err = new std::string(ex.what());
+        return -1;
+    }
+    return 0;
 }
 
 int mapnik_register_font(std::string const &path)
@@ -59,13 +69,14 @@ int mapnik_register_font(std::string const &path)
     mapnik_register_reset_last_error();
     try
     {
-        return mapnik::freetype_engine::register_font(path);
+        mapnik::freetype_engine::register_font(path);
     }
     catch (std::exception const &ex)
     {
         register_err = new std::string(ex.what());
-        return 0;
+        return -1;
     }
+    return 0;
 }
 
 int mapnik_register_fonts(std::string const &dir, bool recurse)
@@ -73,13 +84,14 @@ int mapnik_register_fonts(std::string const &dir, bool recurse)
     mapnik_register_reset_last_error();
     try
     {
-        return mapnik::freetype_engine::register_fonts(dir, recurse);
+        mapnik::freetype_engine::register_fonts(dir, recurse);
     }
     catch (std::exception const &ex)
     {
         register_err = new std::string(ex.what());
-        return 0;
+        return -1;
     }
+    return 0;
 }
 
 std::string mapnik_register_last_error()
@@ -88,7 +100,7 @@ std::string mapnik_register_last_error()
     {
         return *register_err;
     }
-    return NULL;
+    return "";
 }
 
 void mapnik_logging_set_severity(int level)
@@ -147,7 +159,7 @@ inline void mapnik_map_reset_last_error(mapnik_map_t *m)
     if (m && m->err)
     {
         delete m->err;
-        m->err = NULL;
+        m->err = nullptr;
     }
 }
 
@@ -317,7 +329,7 @@ inline void mapnik_image_reset_last_error(mapnik_image_t *i)
     if (i && i->err)
     {
         delete i->err;
-        i->err = NULL;
+        i->err = nullptr;
     }
 }
 
@@ -373,11 +385,11 @@ mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, double scale, double
     }
     mapnik_image_t *i = new mapnik_image_t;
     i->i = im;
-    i->err = NULL;
+    i->err = nullptr;
     return i;
 }
 
-int mapnik_map_render_to_file(mapnik_map_t *m, std::string const &filepath, double scale, double scale_factor, std::string const &format)
+int mapnik_map_render_to_file(mapnik_map_t *m, std::string const &filepath, float scale, float scale_factor, std::string const &format)
 {
     mapnik_map_reset_last_error(m);
     if (m && m->m)
@@ -560,7 +572,3 @@ void mapnik_map_set_height(mapnik_map_t *m, int height)
         m->m->set_height(height);
     }
 }
-
-// #ifndef __cplusplus
-// }
-// #endif
