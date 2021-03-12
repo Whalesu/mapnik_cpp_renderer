@@ -21,7 +21,7 @@ public:
                                   float scale_factor = 1.0,
                                   float scale = 0.0,
                                   bool xml_string_loading = false) = 0;
-    std::string get_err_log();
+    virtual std::string get_err_log();
     static int register_resources();
 
 protected:

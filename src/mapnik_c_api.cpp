@@ -355,7 +355,7 @@ std::string mapnik_image_last_error(mapnik_image_t *i)
     {
         return *(i->err);
     }
-    return NULL;
+    return "";
 }
 
 mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, double scale, double scale_factor)
