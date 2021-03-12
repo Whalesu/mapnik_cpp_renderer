@@ -44,14 +44,14 @@ std::string ImageProvider::get_err_log()
     }
 }
 
-int ImageProvider::render_area(std::string const &xml_config,
-                               double *const bbox,
-                               std::string const &image_path,
-                               int width,
-                               int height,
-                               float scale_factor,
-                               float scale,
-                               bool xml_string_loading)
+imgresult ImageProvider::render_area(std::string const &xml_config,
+                                     double *const bbox,
+                                     std::string const &image_path,
+                                     int width,
+                                     int height,
+                                     float scale_factor,
+                                     float scale,
+                                     bool xml_string_loading)
 {
     if (xml_string_loading == true)
     {
@@ -67,5 +67,5 @@ int ImageProvider::render_area(std::string const &xml_config,
     mapnik_map_zoom_to_box(map, bbox2d);
     if (status == 0)
         status = mapnik_map_render_to_file(map, image_path, scale, scale_factor, "png256");
-    return status;
+    return std::make_pair(image_path, status);
 }

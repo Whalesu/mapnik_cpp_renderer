@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     string xml_info = "";
     int res = 0;
     bool is_xml_string = false;
-
+    imgresult img_res = make_pair("", 0);
     try
     {
         map_input.add_options()
@@ -77,10 +77,11 @@ int main(int argc, char *argv[])
     ImageProvider image_provider = ImageProvider(font_dir);
     if (res == 0)
     {
-        res = image_provider.render_area(
-                  xml_info, bbox.data(), trgt_img, input["width"].as<int>(),
-                  input["height"].as<int>(), input["scale_factor"].as<float>(), is_xml_string
-              );
+        img_res = image_provider.render_area(
+                      xml_info, bbox.data(), trgt_img, input["width"].as<int>(),
+                      input["height"].as<int>(), input["scale_factor"].as<float>(), is_xml_string
+                  );
+        res = img_res.second;
     }
     if (res != 0)
         std::cerr << image_provider.get_err_log()<< '\n';

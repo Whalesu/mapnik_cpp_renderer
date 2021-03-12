@@ -13,14 +13,14 @@ class ImageProvider
 public:
     explicit ImageProvider(std::string const &font_dir);
     ~ImageProvider();
-    int render_area(std::string const &xml_config,
-                    double *const bbox,
-                    std::string const &image_path = "",
-                    int width = 256,
-                    int height = 256,
-                    float scale_factor = 1.0,
-                    float scale = 0.0,
-                    bool xml_string_loading = false);
+    imgresult render_area(std::string const &xml_config,
+                          double *const bbox,
+                          std::string const &image_path = "",
+                          int width = 256,
+                          int height = 256,
+                          float scale_factor = 1.0,
+                          float scale = 0.0,
+                          bool xml_string_loading = false);
     std::string get_err_log();
     static int register_resources();
 

@@ -35,6 +35,7 @@ MAPNIKCAPICALL mapnik_bbox_t *mapnik_bbox(double minx, double miny, double maxx,
 MAPNIKCAPICALL void mapnik_bbox_free(mapnik_bbox_t *b);
 
 // Image
+typedef std::pair<std::string, int> imgresult;
 typedef struct _mapnik_image_t mapnik_image_t;
 MAPNIKCAPICALL void mapnik_image_free(mapnik_image_t *i);
 
