@@ -53,7 +53,6 @@ int ImageProvider::render_area(std::string const &xml_config,
                                float scale,
                                bool xml_string_loading)
 {
-    int status = 0;
     if (xml_string_loading == true)
     {
         status = mapnik_map_load_string(map, xml_config);
