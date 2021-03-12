@@ -3,7 +3,7 @@
 using namespace boost;
 namespace po = boost::program_options;
 
-#include "image_provider/image_provider.h"
+#include "image_provider/image_provider_file.h"
 #include "image_provider/mapnik_c_api.h"
 #include "utils/util.h"
 #include <iostream>
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
     /*------- image processing -------*/
     const std::string font_dir = get_env_var(FONTDIR);
     res = ImageProvider::register_resources();
-    ImageProvider image_provider = ImageProvider(font_dir);
+    ImageProviderFile image_provider = ImageProviderFile(font_dir);
     if (res == 0)
     {
         img_res = image_provider.render_area(
