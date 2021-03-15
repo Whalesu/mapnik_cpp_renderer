@@ -35,6 +35,7 @@ MAPNIKCAPICALL mapnik_bbox_t *mapnik_bbox(double minx, double miny, double maxx,
 MAPNIKCAPICALL void mapnik_bbox_free(mapnik_bbox_t *b);
 
 // Image
+typedef std::pair<std::string, int> imgresult;
 typedef struct _mapnik_image_t mapnik_image_t;
 MAPNIKCAPICALL void mapnik_image_free(mapnik_image_t *i);
 
@@ -42,7 +43,7 @@ MAPNIKCAPICALL std::string mapnik_image_last_error(mapnik_image_t *i);
 
 typedef struct _mapnik_image_blob_t
 {
-    char *ptr;
+    std::string * image_blob;
     unsigned int len;
 } mapnik_image_blob_t;
 MAPNIKCAPICALL void mapnik_image_blob_free(mapnik_image_blob_t *b);
@@ -80,7 +81,7 @@ MAPNIKCAPICALL void mapnik_map_set_maximum_extent(mapnik_map_t *m, double x0, do
 MAPNIKCAPICALL void mapnik_map_reset_maximum_extent(mapnik_map_t *m);
 
 MAPNIKCAPICALL int mapnik_map_render_to_file(mapnik_map_t *m, std::string const &filepath, float scale, float scale_factor, std::string const &format);
-MAPNIKCAPICALL mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, double scale, double scale_factor);
+MAPNIKCAPICALL mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, float scale, float scale_factor);
 
 MAPNIKCAPICALL int mapnik_map_layer_count(mapnik_map_t *m);
 MAPNIKCAPICALL std::string mapnik_map_layer_name(mapnik_map_t *m, size_t idx);

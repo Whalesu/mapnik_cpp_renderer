@@ -355,10 +355,10 @@ std::string mapnik_image_last_error(mapnik_image_t *i)
     {
         return *(i->err);
     }
-    return NULL;
+    return "";
 }
 
-mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, double scale, double scale_factor)
+mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, float scale, float scale_factor)
 {
     mapnik_map_reset_last_error(m);
     mapnik_rgba_image *im = new mapnik_rgba_image(m->m->width(), m->m->height());
@@ -366,10 +366,10 @@ mapnik_image_t *mapnik_map_render_to_image(mapnik_map_t *m, double scale, double
     {
         try
         {
-            mapnik::agg_renderer<mapnik_rgba_image> ren(*m->m, *im, scale_factor);
+            mapnik::agg_renderer<mapnik_rgba_image> ren(*m->m, *im, static_cast<double>(scale_factor));
             if (scale > 0.0)
             {
-                ren.apply(scale);
+                ren.apply(static_cast<double>(scale));
             }
             else
             {
@@ -422,9 +422,9 @@ void mapnik_image_blob_free(mapnik_image_blob_t *b)
 {
     if (b)
     {
-        if (b->ptr)
+        if (b->image_blob)
         {
-            delete[] b->ptr;
+            delete b->image_blob;
         }
         delete b;
     }
@@ -434,22 +434,19 @@ mapnik_image_blob_t *mapnik_image_to_blob(mapnik_image_t *i, std::string format)
 {
     mapnik_image_reset_last_error(i);
     mapnik_image_blob_t *blob = new mapnik_image_blob_t;
-    blob->ptr = NULL;
+    blob->image_blob = nullptr;
     blob->len = 0;
     if (i && i->i)
     {
         try
         {
-            std::string s = save_to_string(*(i->i), format);
-            blob->len = s.length();
-            blob->ptr = new char[blob->len];
-            memcpy(blob->ptr, s.c_str(), blob->len);
+            blob->image_blob = new std::string(save_to_string(*(i->i), format));
         }
         catch (std::exception const &ex)
         {
             i->err = new std::string(ex.what());
             delete blob;
-            return NULL;
+            return nullptr;
         }
     }
     return blob;

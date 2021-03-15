@@ -1,9 +1,11 @@
 #include <boost/program_options.hpp>
+#include <boost/format.hpp>
 
 using namespace boost;
 namespace po = boost::program_options;
 
-#include "image_provider/image_provider.h"
+#include "image_provider/image_provider_file.h"
+#include "image_provider/image_provider_stream.h"
 #include "image_provider/mapnik_c_api.h"
 #include "utils/util.h"
 #include <iostream>
@@ -14,6 +16,22 @@ using namespace std;
 
 const string FONTDIR = "FONTDIR";
 
+std::shared_ptr<ImageProvider> make_provider(const string &font_dir, const string &output_type)
+{
+    if (output_type == "file")
+    {
+        return std::shared_ptr<ImageProvider>(new ImageProviderFile(font_dir));
+    }
+    else if (output_type == "stream")
+    {
+        return std::shared_ptr<ImageProvider>(new ImageProviderStream(font_dir));
+    }
+    else
+    {
+        throw std::logic_error(str(boost::format("Output type: %1% is not supported") % output_type));
+    }
+}
+
 int main(int argc, char *argv[])
 {
     po::options_description map_input("mapnik_render options");
@@ -22,6 +40,8 @@ int main(int argc, char *argv[])
     string xml_info = "";
     int res = 0;
     bool is_xml_string = false;
+    string output_type = "";
+    imgresult img_res = make_pair("", 0);
 
     try
     {
@@ -33,11 +53,12 @@ int main(int argc, char *argv[])
         ("height", po::value<int>()->default_value(256), "tile height in pixel")
         ("width", po::value<int>()->default_value(256), "tile width in pixel")
         ("scale_factor", po::value<float>()->default_value(1.0), "scale factor")
-        ("xml_string", po::value<bool>(), "optional xml config passed as string");
+        ("xml_string", po::value<bool>(), "optional xml config passed as string")
+        ("output_type", po::value<string>(&output_type)->default_value("file"), "output type, support file and stream");
     }
     catch (std::exception &ex)
     {
-        std::cerr << ex.what() << '\n';
+        cerr << ex.what() << '\n';
         return -1;
     }
 
@@ -53,7 +74,7 @@ int main(int argc, char *argv[])
 
     if (!(input.count("xml_dir") ^ input.count("xml_string")))
     {
-        std::cerr << "either xml_dir or xml_string is required" << '\n';
+        cerr << "either xml_dir or xml_string is required" << '\n';
         return -1;
     }
     else if (input.count("xml_dir"))
@@ -68,21 +89,26 @@ int main(int argc, char *argv[])
 
     if (bbox.size() != 4)
     {
-        std::cerr << "wrong size of bbox, should be 4: " << bbox.size() << '\n';
+        cerr << "wrong size of bbox, should be 4: " << bbox.size() << '\n';
         return -1;
     }
     /*------- image processing -------*/
     const std::string font_dir = get_env_var(FONTDIR);
     res = ImageProvider::register_resources();
-    ImageProvider image_provider = ImageProvider(font_dir);
+    std::shared_ptr<ImageProvider> image_provider = make_provider(font_dir, output_type);
+    if (image_provider == nullptr)
+        return -1;
+
     if (res == 0)
     {
-        res = image_provider.render_area(
-                  xml_info, bbox.data(), trgt_img, input["width"].as<int>(),
-                  input["height"].as<int>(), input["scale_factor"].as<float>(), is_xml_string
-              );
+        img_res = image_provider ->render_area(
+                      xml_info, bbox.data(), trgt_img, input["width"].as<int>(),
+                      input["height"].as<int>(), input["scale_factor"].as<float>(), is_xml_string
+                  );
+        res = img_res.second;
+        cout<<img_res.first;
     }
     if (res != 0)
-        std::cerr << image_provider.get_err_log()<< '\n';
+        cerr << image_provider->get_err_log()<< '\n';
     return res;
 }
