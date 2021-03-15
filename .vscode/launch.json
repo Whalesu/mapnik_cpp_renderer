@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/mapnik_renderer",
+            "args": [
+                "--xml_dir",
+                "/Users/jingyusu/Desktop/15770551472ea94b214de0575322228e97188a17.xml",
+                "--bbox",
+                "13529488.05499435",
+                "3659472.8978689983",
+                "13530101.189715622",
+                "3660085.70353947",
+                "--output_type",
+                "stream"
+                // "--trgt_img",
+                // "/Users/jingyusu/Desktop/test_1577_bl.png"
+            ],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}

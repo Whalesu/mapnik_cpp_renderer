@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
                       input["height"].as<int>(), input["scale_factor"].as<float>(), is_xml_string
                   );
         res = img_res.second;
+        cout<<img_res.first;
     }
     if (res != 0)
         cerr << image_provider->get_err_log()<< '\n';
