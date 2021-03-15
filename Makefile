@@ -1,5 +1,4 @@
 # inherit from env
-CXX := $(CXX)
 CC := $(CC)
 CXXFLAGS := $(CXXFLAGS) -Wall -pedantic -g -v -lstdc++
 CFLAGS := $(CFLAGS) -Wall -pedantic LDFLAGS := $(LDFLAGS)
@@ -13,4 +12,4 @@ LIBNAME := mapnik_renderer
 
 all: $(LIBNAME)
 $(LIBNAME): mapnik_renderer.cpp
-	$(CXX) -o $(LIBNAME) $(SHARED_FLAG) mapnik_renderer.cpp src/image_provider.cpp src/image_provider_file.cpp src/image_provider_stream.cpp src/mapnik_c_api.cpp src/utils/util.cpp -I ./include $(LDFLAGS) $(CXXFLAGS) $(MAPNIK_CXXFLAGS) $(MAPNIK_LDFLAGS) $(BOOST_PROG_OPTS)
+	$(CC) -o $(LIBNAME) $(SHARED_FLAG) mapnik_renderer.cpp src/image_provider.cpp src/image_provider_file.cpp src/image_provider_stream.cpp src/mapnik_c_api.cpp src/utils/util.cpp -I ./include $(LDFLAGS) $(CXXFLAGS) $(MAPNIK_CXXFLAGS) $(MAPNIK_LDFLAGS) $(BOOST_PROG_OPTS)

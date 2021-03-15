@@ -23,17 +23,6 @@
 
 typedef mapnik::image_rgba8 mapnik_rgba_image;
 
-static std::string *register_err;
-
-inline void mapnik_register_reset_last_error()
-{
-    if (register_err)
-    {
-        delete register_err;
-        register_err = nullptr;
-    }
-}
-
 int mapnik_register_datasource(std::string const &path)
 {
     mapnik_register_reset_last_error();

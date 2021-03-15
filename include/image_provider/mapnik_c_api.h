@@ -25,8 +25,17 @@ const int MAPNIK_NONE = 0;
 const int MAPNIK_DEBUG = 1;
 const int MAPNIK_WARN = 2;
 const int MAPNIK_ERROR = 3;
+static std::string *register_err;
 MAPNIKCAPICALL void mapnik_logging_set_severity(int);
-MAPNIKCAPICALL void mapnik_register_reset_last_error();
+MAPNIKCAPICALL inline void mapnik_register_reset_last_error()
+{
+    if (register_err)
+    {
+        delete register_err;
+        register_err = nullptr;
+    }
+}
+
 MAPNIKCAPICALL std::string mapnik_register_last_error();
 
 // BBOX

@@ -7,7 +7,7 @@
 std::string const ImageProvider::INPUT_PLUGIN_DIR = "INPUT_PLUGIN_DIR";
 std::string const ImageProvider::FONTDIR = "FONTDIR";
 
-ImageProvider::ImageProvider(std::string const &font_dir): font_dir(font_dir), status(0), map(mapnik_map(0,0)), bbox2d(nullptr)
+ImageProvider::ImageProvider(std::string const &font_dir): status(0), font_dir(font_dir), map(mapnik_map(0,0)), bbox2d(nullptr)
 {
 }
 
