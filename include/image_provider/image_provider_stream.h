@@ -19,6 +19,8 @@ public:
                           float scale_factor = 1.0,
                           float scale = 0.0,
                           bool xml_string_loading = false);
+    void set_image_t(mapnik_map_t *, float scale = 1.0, float scale_factor = 1.0);
+    void set_image_blob_t(mapnik_image_t *, std::string format = "png8:m=h:z=1");
     virtual std::string get_err_log();
 
 private:

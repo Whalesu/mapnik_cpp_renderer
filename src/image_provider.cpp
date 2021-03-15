@@ -23,8 +23,7 @@ ImageProvider::~ImageProvider()
 
 int ImageProvider::register_resources()
 {
-    int reg_status = 0;
-    reg_status = mapnik_register_fonts(get_env_var(ImageProvider::FONTDIR)) || mapnik_register_datasources(get_env_var(ImageProvider::INPUT_PLUGIN_DIR));
+    int reg_status = mapnik_register_fonts(get_env_var(ImageProvider::FONTDIR)) || mapnik_register_datasources(get_env_var(ImageProvider::INPUT_PLUGIN_DIR));
     return reg_status;
 }
 

@@ -1,0 +1,61 @@
+/* tasks.json */
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "command": "clang++",
+            "args": [
+                "-o",
+                "mapnik_renderer", // executable
+                "mapnik_renderer.cpp", // main file
+                "src/image_provider_file.cpp",
+                "src/image_provider_stream.cpp",
+                "src/image_provider.cpp",
+                "src/mapnik_c_api.cpp",
+                "src/utils/util.cpp",
+                "-std=c++14",
+                "-I",
+                "/usr/local/include",
+                "-I",
+                "/usr/local/opt/icu4c/include",
+                "-I",
+                "/usr/local/include/mapnik",
+                // "-I",
+                // "/usr/local/opt/boost@1.75/include",
+                "-I",
+                "./include",
+                "-L",
+                "/usr/local/lib",
+                // "-L",
+                // "/usr/local/Cellar/boost/1.75.0_2/lib",
+                "-l",
+                "mapnik",
+                "-lboost_program_options",
+                "-g",
+                "-v"
+            ],
+            "type": "shell",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": {
+                "owner": "cpp",
+                "fileLocation": [
+                    "relative",
+                    "${workspaceRoot}"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            }
+        }
+    ]
+}
