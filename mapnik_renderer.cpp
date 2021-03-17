@@ -37,9 +37,10 @@ int main(int argc, char *argv[])
     po::options_description map_input("mapnik_render options");
     vector<double> bbox;
     string trgt_img = "";
-    string xml_info = "";
+    string xml_config = "";
     int res = 0;
     bool is_xml_string = false;
+    float img_scale = 1.0;
     string output_type = "";
     imgresult img_res = make_pair("", 0);
 
@@ -47,13 +48,13 @@ int main(int argc, char *argv[])
     {
         map_input.add_options()
         ("help,h", "show available options")
-        ("xml_dir", po::value<string>(), "imported config")
+        ("xml_config", po::value<string>(&xml_config), "imported config, support filename or xml_string")
         ("trgt_img, img", po::value<string>(&trgt_img)->default_value("/Users/jingyusu/Desktop/test.png"), "export filepath")
         ("bbox", po::value<vector<double>>(&bbox)->multitoken()->composing(), "bbox of tile")
         ("height", po::value<int>()->default_value(256), "tile height in pixel")
         ("width", po::value<int>()->default_value(256), "tile width in pixel")
         ("scale_factor", po::value<float>()->default_value(1.0), "scale factor")
-        ("xml_string", po::value<bool>(), "optional xml config passed as string")
+        ("is_xml_string", po::value<bool>(&is_xml_string)->default_value(false), "optional xml config passed as string")
         ("output_type", po::value<string>(&output_type)->default_value("file"), "output type, support file and stream");
     }
     catch (std::exception &ex)
@@ -71,22 +72,11 @@ int main(int argc, char *argv[])
         cout << map_input << endl;
         return 0;
     }
-
-    if (!(input.count("xml_dir") ^ input.count("xml_string")))
+    if (!(input.count("xml_config")))
     {
-        cerr << "either xml_dir or xml_string is required" << '\n';
+        cerr << "xml_config is required" << '\n';
         return -1;
     }
-    else if (input.count("xml_dir"))
-    {
-        xml_info = input["xml_dir"].as<string>();
-    }
-    else
-    {
-        xml_info = input["xml_string"].as<string>();
-        is_xml_string = true;
-    }
-
     if (bbox.size() != 4)
     {
         cerr << "wrong size of bbox, should be 4: " << bbox.size() << '\n';
@@ -99,11 +89,13 @@ int main(int argc, char *argv[])
     if (image_provider == nullptr)
         return -1;
 
+    cout << "is_xml_config : " <<  is_xml_string <<endl;
+
     if (res == 0)
     {
         img_res = image_provider ->render_area(
-                      xml_info, bbox.data(), trgt_img, input["width"].as<int>(),
-                      input["height"].as<int>(), input["scale_factor"].as<float>(), is_xml_string
+                      xml_config, bbox.data(), trgt_img, input["width"].as<int>(),
+                      input["height"].as<int>(), input["scale_factor"].as<float>(), img_scale, is_xml_string
                   );
         res = img_res.second;
         cout<<img_res.first;
